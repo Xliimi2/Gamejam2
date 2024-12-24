@@ -80,25 +80,19 @@ public class GameManager : MonoBehaviour
 
     private void SubmitNewPosition()
     {
-        if (GUILayout.Button(m_NetworkManager.IsServer ? "Move" : "Request Position Change"))
+        if (GUILayout.Button("Move"))
         {
-            // إذا كان الخادم، نقوم بتحريك اللاعبين
-            if (m_NetworkManager.IsServer && !m_NetworkManager.IsClient)
+            foreach (var uid in m_NetworkManager.ConnectedClientsIds)
             {
-                foreach (ulong uid in m_NetworkManager.ConnectedClientsIds)
+                var playerNetworkObject = m_NetworkManager.SpawnManager.GetPlayerNetworkObject(uid);
+                var playerMovement = playerNetworkObject.GetComponent<PlayerMovementTest>();
+                if (playerMovement != null)
                 {
-                    var playerNetworkObject = m_NetworkManager.SpawnManager.GetPlayerNetworkObject(uid);
-                    var playerMovement = playerNetworkObject.GetComponent<PlayerMovementTest>();
-                    playerMovement.Move();  // تنفيذ الحركة
+                    playerMovement.Move();  // تحديث الموقع عبر الشبكة
                 }
-            }
-            else
-            {
-                // إذا كان العميل، نقوم بطلب تغيير الوضع
-                var playerObject = m_NetworkManager.SpawnManager.GetLocalPlayerObject();
-                var player = playerObject.GetComponent<PlayerMovementTest>();
-                player.Move();  // تنفيذ الحركة
             }
         }
     }
+
+
 }
