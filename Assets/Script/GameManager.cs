@@ -3,6 +3,8 @@ using Unity.Netcode;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject[] playerPrefabs; // قائمة Prefabs لكل لاعب
+
     private NetworkManager m_NetworkManager;
 
     void Awake()
@@ -10,7 +12,6 @@ public class GameManager : MonoBehaviour
         // التأكد من تعيين NetworkManager
         m_NetworkManager = GetComponent<NetworkManager>();
 
-        // التحقق من وجود NetworkManager في الكائن
         if (m_NetworkManager == null)
         {
             Debug.LogError("NetworkManager is missing from the GameManager object!");
@@ -22,31 +23,30 @@ public class GameManager : MonoBehaviour
         // إذا كان m_NetworkManager غير مُعين بشكل صحيح، لا نريد أن نستمر في هذه الدالة
         if (m_NetworkManager != null)
         {
-            m_NetworkManager.StartHost();  // محاولة بدء مضيف اللعبة (Host)
+            m_NetworkManager.OnClientConnectedCallback += OnClientConnected;
+
+            // بدء المضيف تلقائيًا للتجربة
+            m_NetworkManager.StartHost();
         }
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
-        // التحقق إذا كان m_NetworkManager غير null
         if (m_NetworkManager == null)
         {
             GUILayout.Label("NetworkManager is not available!");
-            return; // إذا لم يكن المكون موجودًا، نوقف تنفيذ باقي الدالة
+            return;
         }
 
         GUILayout.BeginArea(new Rect(10, 10, 300, 300));
 
-        // إذا لم يكن العميل أو الخادم قيد التشغيل، عرض الأزرار
         if (!m_NetworkManager.IsClient && !m_NetworkManager.IsServer)
         {
             StartButtons();
         }
         else
         {
-            // عرض حالة الاتصال
             StatusLabels();
-            SubmitNewPosition();
         }
 
         GUILayout.EndArea();
@@ -56,43 +56,47 @@ public class GameManager : MonoBehaviour
     {
         if (GUILayout.Button("Host")) 
         {
-            m_NetworkManager.StartHost();  // بدء المضيف
+            m_NetworkManager.StartHost();
         }
         if (GUILayout.Button("Client"))
         {
-            m_NetworkManager.StartClient();  // بدء العميل
+            m_NetworkManager.StartClient();
         }
         if (GUILayout.Button("Server"))
         {
-            m_NetworkManager.StartServer();  // بدء الخادم
+            m_NetworkManager.StartServer();
         }
     }
 
     private void StatusLabels()
     {
-        var mode = m_NetworkManager.IsHost ?
-            "Host" : m_NetworkManager.IsServer ? "Server" : "Client";
-
-        GUILayout.Label("Transport: " + 
-                        m_NetworkManager.NetworkConfig.NetworkTransport.GetType().Name);
+        var mode = m_NetworkManager.IsHost ? "Host" : m_NetworkManager.IsServer ? "Server" : "Client";
+        GUILayout.Label("Transport: " + m_NetworkManager.NetworkConfig.NetworkTransport.GetType().Name);
         GUILayout.Label("Mode: " + mode);
     }
 
-    private void SubmitNewPosition()
+    private void OnClientConnected(ulong clientId)
     {
-        if (GUILayout.Button("Move"))
+        if (m_NetworkManager.IsServer)
         {
-            foreach (var uid in m_NetworkManager.ConnectedClientsIds)
+            // اختيار Prefab بناءً على ID العميل
+            int prefabIndex = (int)(clientId % (ulong)playerPrefabs.Length);
+            GameObject selectedPrefab = playerPrefabs[prefabIndex];
+
+            // إنشاء الكائن
+            GameObject playerInstance = Instantiate(selectedPrefab);
+
+            // التأكد من أن الكائن يحتوي على NetworkObject
+            NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
+            if (networkObject != null)
             {
-                var playerNetworkObject = m_NetworkManager.SpawnManager.GetPlayerNetworkObject(uid);
-                var playerMovement = playerNetworkObject.GetComponent<PlayerMovementTest>();
-                if (playerMovement != null)
-                {
-                    playerMovement.Move();  // تحديث الموقع عبر الشبكة
-                }
+                // تعيين الملكية للعميل
+                networkObject.SpawnWithOwnership(clientId);
+            }
+            else
+            {
+                Debug.LogError("Player Prefab is missing a NetworkObject component!");
             }
         }
     }
-
-
 }
