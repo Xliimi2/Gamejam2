@@ -6,7 +6,11 @@ public class PlayerMovementTest : NetworkBehaviour
     public NetworkVariable<Vector2> Position = new NetworkVariable<Vector2>(
         new Vector2(0f, 0f), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-    public float moveSpeed = 5f;  // Movement speed
+    public GameObject bulletPrefab; // Bullet prefab
+    public Transform firePoint;    // Fire point for shooting
+    public float bulletSpeed = 20f; // Speed of the bullet
+
+    public float moveSpeed = 5f;   // Movement speed
     public float jumpForce = 10f; // Jump force
     private Rigidbody2D rb;       // Rigidbody for physics-based movement
     private bool isGrounded = true;
@@ -61,6 +65,12 @@ public class PlayerMovementTest : NetworkBehaviour
         {
             Move();  // Handle movement and jumping
 
+            // Handle shooting
+            if (Input.GetButtonDown("Fire1")) // Left mouse button
+            {
+                ShootServerRpc();
+            }
+
             // Toggle gravity on key press
             if (Input.GetKeyDown(KeyCode.G)) // Change this key to whatever you'd like
             {
@@ -79,6 +89,27 @@ public class PlayerMovementTest : NetworkBehaviour
         else
         {
             transform.position = new Vector3(Position.Value.x, Position.Value.y, 0f); // Update position from network
+        }
+    }
+
+    // Shooting logic
+    [ServerRpc]
+    private void ShootServerRpc(ServerRpcParams rpcParams = default)
+    {
+        ShootClientRpc();
+    }
+
+    [ClientRpc]
+    private void ShootClientRpc()
+    {
+        if (firePoint != null && bulletPrefab != null)
+        {
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+            rb.linearVelocity = firePoint.right * bulletSpeed; // Shoot in the direction of the fire point
+
+            // Destroy the bullet after 2 seconds to avoid clutter
+            Destroy(bullet, 2f);
         }
     }
 
@@ -173,26 +204,21 @@ public class PlayerMovementTest : NetworkBehaviour
         {
             if (isWalking.Value)
             {
-                // إذا كانت الشخصية تتحرك، تأكد من تشغيل الأنميشن "Run"
                 if (!playerAnimation.isPlaying || playerAnimation["Run"].time == 0)
                 {
-                    playerAnimation.Play("Run"); // تشغيل الأنميشن "Run"
+                    playerAnimation.Play("Run"); // Play the walk animation
                 }
             }
             else
             {
-                // إذا توقفت الحركة، إيقاف الأنميشن الحالي والرجوع إلى "Idle"
-                playerAnimation.Stop(); // إيقاف الأنميشن الحالي
-                playerAnimation.Play("Idle"); // تشغيل الأنميشن "Idle" عند التوقف
+                playerAnimation.Stop(); // Stop the current animation
+                playerAnimation.Play("Idle"); // Play the idle animation
             }
         }
     }
 
-
-    // This function is called when the walking state changes on the network
     private void OnWalkingStateChanged(bool oldState, bool newState)
     {
-        // Ensure the animation is updated on all clients
         if (playerAnimation != null)
         {
             if (newState)

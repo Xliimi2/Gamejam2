@@ -1689,7 +1689,7 @@ GameObject:
   - component: {fileID: -8197574987307234114}
   - component: {fileID: 9096618155138901650}
   m_Layer: 0
-  m_Name: space_man_model (1)
+  m_Name: space_man_model (1) 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
