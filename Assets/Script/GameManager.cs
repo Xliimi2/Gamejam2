@@ -4,6 +4,7 @@ using Unity.Netcode;
 public class GameManager : MonoBehaviour
 {
     public GameObject[] playerPrefabs; // قائمة Prefabs لكل لاعب
+    public GameObject monsterPrefab; // إضافة Prefab الوحش
 
     private NetworkManager m_NetworkManager;
 
@@ -79,24 +80,24 @@ public class GameManager : MonoBehaviour
     {
         if (m_NetworkManager.IsServer)
         {
-            // اختيار Prefab بناءً على ID العميل
+            // إنشاء اللاعب
             int prefabIndex = (int)(clientId % (ulong)playerPrefabs.Length);
-            GameObject selectedPrefab = playerPrefabs[prefabIndex];
-
-            // إنشاء الكائن
-            GameObject playerInstance = Instantiate(selectedPrefab);
-
-            // التأكد من أن الكائن يحتوي على NetworkObject
-            NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
-            if (networkObject != null)
+            GameObject playerInstance = Instantiate(playerPrefabs[prefabIndex]);
+            NetworkObject playerNetworkObject = playerInstance.GetComponent<NetworkObject>();
+            if (playerNetworkObject != null)
             {
-                // تعيين الملكية للعميل
-                networkObject.SpawnWithOwnership(clientId);
+                playerNetworkObject.SpawnWithOwnership(clientId);
             }
-            else
+
+            // إنشاء الوحش
+            GameObject monsterInstance = Instantiate(monsterPrefab);
+            NetworkObject monsterNetworkObject = monsterInstance.GetComponent<NetworkObject>();
+            if (monsterNetworkObject != null)
             {
-                Debug.LogError("Player Prefab is missing a NetworkObject component!");
+                monsterNetworkObject.SpawnWithOwnership(clientId);
             }
         }
     }
+
+
 }

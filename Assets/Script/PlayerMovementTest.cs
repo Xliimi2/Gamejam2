@@ -10,8 +10,8 @@ public class PlayerMovementTest : NetworkBehaviour
     public Transform firePoint;    // Fire point for shooting
     public float bulletSpeed = 20f; // Speed of the bullet
 
-    public float moveSpeed = 5f;   // Movement speed
-    public float jumpForce = 10f; // Jump force
+    public float moveSpeed = 3f;   // Movement speed
+    public float jumpForce = 7f; // Jump force
     private Rigidbody2D rb;       // Rigidbody for physics-based movement
     private bool isGrounded = true;
     private bool isGravityInverted = false; // Track gravity state
