@@ -147,7 +147,8 @@ public class PlayerMovementTest : NetworkBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            Vector2 jumpDirection = isGravityInverted ? Vector2.down : Vector2.up; // تحديد اتجاه القفز
+            rb.AddForce(jumpDirection * jumpForce, ForceMode2D.Impulse);
             isGrounded = false;
         }
     }
