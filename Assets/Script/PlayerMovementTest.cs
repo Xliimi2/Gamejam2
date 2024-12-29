@@ -85,12 +85,19 @@ public class PlayerMovementTest : NetworkBehaviour
 
             // Check if walking animation needs to be updated
             UpdateWalkingAnimation();
+
+            // Check if the player has fallen below a certain height
+            if (transform.position.y < -10f) // Replace -10f with the desired fall threshold
+            {
+                ReturnToStart();
+            }
         }
         else
         {
             transform.position = new Vector3(Position.Value.x, Position.Value.y, 0f); // Update position from network
         }
     }
+
 
     // Shooting logic
     [ServerRpc]

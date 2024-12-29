@@ -450,6 +450,10 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2989000923634411228, guid: d0dd28a2ca74249c394cf3af6b3c8c23, type: 3}
   firePoint: {fileID: 287574854571754104}
   bulletSpeed: 20
+  meteorPrefab: {fileID: 641033917556607560, guid: dbc183b46684a4e7ea65c9084e5094f1, type: 3}
+  meteorSpawnArea: {fileID: 8532586784351089307, guid: fee671da774294324b53c4ceaecacb71, type: 3}
+  meteorCount: 5
+  meteorSpawnHeight: 10
   moveSpeed: 3
   jumpForce: 7
   startPosition: {x: 0, y: 0, z: 0}

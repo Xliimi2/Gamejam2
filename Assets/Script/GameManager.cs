@@ -3,14 +3,13 @@ using Unity.Netcode;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject[] playerPrefabs; // قائمة Prefabs لكل لاعب
-    public GameObject monsterPrefab; // إضافة Prefab الوحش
+    public GameObject[] playerPrefabs; 
+    public GameObject monsterPrefab; 
 
     private NetworkManager m_NetworkManager;
 
     void Awake()
     {
-        // التأكد من تعيين NetworkManager
         m_NetworkManager = GetComponent<NetworkManager>();
 
         if (m_NetworkManager == null)
@@ -21,12 +20,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // إذا كان m_NetworkManager غير مُعين بشكل صحيح، لا نريد أن نستمر في هذه الدالة
         if (m_NetworkManager != null)
         {
             m_NetworkManager.OnClientConnectedCallback += OnClientConnected;
 
-            // بدء المضيف تلقائيًا للتجربة
             m_NetworkManager.StartHost();
         }
     }
@@ -80,7 +77,6 @@ public class GameManager : MonoBehaviour
     {
         if (m_NetworkManager.IsServer)
         {
-            // إنشاء اللاعب
             int prefabIndex = (int)(clientId % (ulong)playerPrefabs.Length);
             GameObject playerInstance = Instantiate(playerPrefabs[prefabIndex]);
             NetworkObject playerNetworkObject = playerInstance.GetComponent<NetworkObject>();
@@ -89,7 +85,6 @@ public class GameManager : MonoBehaviour
                 playerNetworkObject.SpawnWithOwnership(clientId);
             }
 
-            // إنشاء الوحش
             GameObject monsterInstance = Instantiate(monsterPrefab);
             NetworkObject monsterNetworkObject = monsterInstance.GetComponent<NetworkObject>();
             if (monsterNetworkObject != null)
