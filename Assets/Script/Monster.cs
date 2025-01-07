@@ -12,7 +12,7 @@ public class Monster : NetworkBehaviour
 
         if (!IsOwner)
         {
-            gameObject.SetActive(false); // إخفاء الوحش عن اللاعبين الآخرين
+            gameObject.SetActive(true); // إخفاء الوحش عن اللاعبين الآخرين
         }
     }
 

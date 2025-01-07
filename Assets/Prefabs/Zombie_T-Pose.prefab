@@ -563,7 +563,7 @@ GameObject:
   - component: {fileID: 6056699088077757814}
   m_Layer: 0
   m_Name: Zombie_T-Pose
-  m_TagString: Monster
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -692,7 +692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2988641481
+  GlobalObjectIdHash: 2893208221
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
