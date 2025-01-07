@@ -1,11 +1,13 @@
 using UnityEngine;
 using Unity.Netcode;
-
+using TMPro;
 public class PlayerMovementTest : NetworkBehaviour
 {
     public NetworkVariable<Vector2> Position = new NetworkVariable<Vector2>(
         new Vector2(0f, 0f), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
+    public TMP_Text winText; 
+    public TMP_Text loseText;
+    private bool hasFinished = false;  
     public GameObject bulletPrefab; // Bullet prefab
     public Transform firePoint;    // Fire point for shooting
     public float bulletSpeed = 20f; // Speed of the bullet
@@ -184,6 +186,24 @@ public class PlayerMovementTest : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (!hasFinished)
+        {
+            if (other.CompareTag("EndZone")) 
+            {
+                hasFinished = true;
+
+                if (IsOwner)
+                {
+                    ShowWinText();
+
+                    ShowLoseTextToOtherPlayer();
+                }
+                else
+                {
+                    ShowLoseText();
+                }
+            }
+        }
         if (other.CompareTag("Obstacle"))
         {
             ReturnToStart();
@@ -240,6 +260,32 @@ public class PlayerMovementTest : NetworkBehaviour
             {
                 playerAnimation.Stop("Run"); // Stop the walk animation
             }
+        }
+    }
+    private void ShowWinText()
+    {
+        if (winText != null)
+        {
+            winText.text = "You Win!"; 
+            winText.enabled = true;
+        }
+    }
+
+    private void ShowLoseText()
+    {
+        if (loseText != null)
+        {
+            loseText.text = "You Lose!";
+            loseText.enabled = true;
+        }
+    }
+
+    private void ShowLoseTextToOtherPlayer()
+    {
+        if (!IsOwner && loseText != null)
+        {
+            loseText.text = "You Lose!";
+            loseText.enabled = true;
         }
     }
 }

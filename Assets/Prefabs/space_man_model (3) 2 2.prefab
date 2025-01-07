@@ -419,7 +419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2802216512
+  GlobalObjectIdHash: 1859922275
   InScenePlacedSourceGlobalObjectIdHash: 439118485
   DeferredDespawnTick: 0
   Ownership: 1
@@ -447,6 +447,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   Position:
     m_InternalValue: {x: 0, y: 0}
+  winText: {fileID: 2825714285623008085, guid: 11aab02bf633b40379fbc8ad62226d23, type: 3}
+  loseText: {fileID: 6649023033796138556, guid: 101ec3a10c9c94ae5ae77d4234279c29, type: 3}
   bulletPrefab: {fileID: 2989000923634411228, guid: 44cdcd55c8562cc46b31e272eb09fc5b, type: 3}
   firePoint: {fileID: 287574854571754104}
   bulletSpeed: 20
