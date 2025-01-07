@@ -3,8 +3,8 @@ using UnityEngine;
 public class ResetTilt : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private float resetSpeed = 10f; 
-    private bool shouldReset = false;
+    private float resetSpeed = 5f;
+    private bool shouldReset = false; 
 
     private void Start()
     {
@@ -15,8 +15,8 @@ public class ResetTilt : MonoBehaviour
     {
         if (shouldReset)
         {
-            float currentAngle = rb.rotation;
-            float targetAngle = 0f;
+            float currentAngle = rb.rotation; 
+            float targetAngle = 0f; 
             float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, Time.fixedDeltaTime * resetSpeed);
             rb.MoveRotation(newAngle);
 
@@ -40,7 +40,7 @@ public class ResetTilt : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            shouldReset = true;
+            shouldReset = true; 
         }
     }
 }
