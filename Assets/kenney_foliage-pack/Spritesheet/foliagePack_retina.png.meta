@@ -347,7 +347,16 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      foliagePack_retina_0: 1298252922265056050
+      foliagePack_retina_1: -5520893465457717458
+      foliagePack_retina_2: -2791366009763608134
+      foliagePack_retina_3: 1954666428599819697
+      foliagePack_retina_4: 3922231383971474730
+      foliagePack_retina_5: 8924024900123060132
+      foliagePack_retina_6: 631014930761291396
+      foliagePack_retina_7: 6541804183090654694
+      foliagePack_retina_8: 6461739540389683529
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

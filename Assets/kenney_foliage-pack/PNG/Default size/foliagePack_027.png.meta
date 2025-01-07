@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      foliagePack_027_0: 1451418722292560436
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
