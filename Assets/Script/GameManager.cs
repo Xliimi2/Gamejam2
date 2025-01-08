@@ -3,8 +3,8 @@ using Unity.Netcode;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject[] playerPrefabs; 
-    public GameObject monsterPrefab; 
+    public GameObject[] playerPrefabs;
+    public GameObject monsterPrefab;
 
     private NetworkManager m_NetworkManager;
 
@@ -24,8 +24,11 @@ public class GameManager : MonoBehaviour
         {
             m_NetworkManager.OnClientConnectedCallback += OnClientConnected;
 
-            // بدء المضيف تلقائيًا للتجربة
-            m_NetworkManager.StartHost();
+          
+            if (!m_NetworkManager.IsClient && !m_NetworkManager.IsServer)
+            {
+                m_NetworkManager.StartHost(); 
+            }
         }
     }
 
@@ -55,11 +58,11 @@ public class GameManager : MonoBehaviour
     {
         if (GUILayout.Button("Host")) 
         {
-            m_NetworkManager.StartHost();
+            m_NetworkManager.StartHost(); 
         }
         if (GUILayout.Button("Client"))
         {
-            m_NetworkManager.StartClient();
+            m_NetworkManager.StartClient(); 
         }
         if (GUILayout.Button("Server"))
         {
@@ -78,7 +81,6 @@ public class GameManager : MonoBehaviour
     {
         if (m_NetworkManager.IsServer)
         {
-            // إنشاء اللاعب
             int prefabIndex = (int)(clientId % (ulong)playerPrefabs.Length);
             GameObject playerInstance = Instantiate(playerPrefabs[prefabIndex]);
             NetworkObject playerNetworkObject = playerInstance.GetComponent<NetworkObject>();
@@ -87,7 +89,6 @@ public class GameManager : MonoBehaviour
                 playerNetworkObject.SpawnWithOwnership(clientId);
             }
 
-            // إنشاء الوحش
             GameObject monsterInstance = Instantiate(monsterPrefab);
             NetworkObject monsterNetworkObject = monsterInstance.GetComponent<NetworkObject>();
             if (monsterNetworkObject != null)
@@ -96,6 +97,4 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
-
 }
